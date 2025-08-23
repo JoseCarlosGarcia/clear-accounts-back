@@ -1,9 +1,11 @@
 import { RepeatUserException } from "../exceptions/user";
 import { CreateUserProps, IUserRepository } from "../repository/user";
+import { PasswordCrypt } from "./password-crypt";
 
 export class UserCreator {
   constructor(
     private readonly repository: IUserRepository,
+    private readonly hasher: PasswordCrypt,
   ) {}
 
   async execute({
@@ -18,12 +20,12 @@ export class UserCreator {
       throw new RepeatUserException();
     }
 
-    //const password = await this.hasher.execute({ password: ipassword });
+    const hashedpassword = await this.hasher.execute({ password: password });
 
     await this.repository.create({
       email: email,
       name: name,
-      password: password,
+      password: hashedpassword,
       birthday: birthday
     });
   }

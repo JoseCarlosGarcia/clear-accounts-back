@@ -4,6 +4,7 @@ import { UserEntity } from 'src/user/infrastructure/postgres/entity/user.entity'
 import { UserModule } from 'src/user/user.module';
 import { EnvModule } from './modules/env/env.module';
 import { EnvService } from './modules/env/services/env';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -29,6 +30,6 @@ import { EnvService } from './modules/env/services/env';
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [JwtService],
 })
 export class AppModule {}

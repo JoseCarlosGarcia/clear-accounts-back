@@ -56,7 +56,7 @@ export class UserPostgresRepository implements IUserRepository {
     const found = await this.userRepository.findOne({
       where: { email: email },
     });
-
+    
     return found ? UserPostgresMapper.execute(found) : null;
   }
 

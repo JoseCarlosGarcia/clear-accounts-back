@@ -5,6 +5,8 @@ import { UserResponse } from 'src/user/application/dto/read/user';
 import { CreateUserDto } from 'src/user/application/dto/write/dto/create-user';
 import { UserCreator } from 'src/user/domain/services/user-creator';
 import { CreateUser } from 'src/user/application/use-cases/user/create-user';
+import { Auth } from '../decorators/auth';
+import { PasswordCrypt } from 'src/user/domain/services/password-crypt';
 
 @Controller('user')
 export class UserController {
@@ -12,6 +14,7 @@ export class UserController {
     private readonly repository: UserPostgresRepository,
   ) {}
 
+  @Auth()
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<UserResponse> {
     const usecase = new GetUserById(this.repository);
@@ -23,7 +26,8 @@ export class UserController {
 
   @Post()
   async createAdmin(@Body() dto: CreateUserDto): Promise<void> {
-    const creator = new UserCreator(this.repository);
+    const hasher = new PasswordCrypt();
+    const creator = new UserCreator(this.repository, hasher);
 
     const usecase = new CreateUser(creator);
 
