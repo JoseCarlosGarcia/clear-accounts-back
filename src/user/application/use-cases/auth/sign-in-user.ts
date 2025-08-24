@@ -1,9 +1,10 @@
 import { IUserRepository } from 'src/user/domain/repository/user';
-import { SignInDTO } from '../../dto/write/dto/sign-in';
+import { SignInDTO } from '../../dto/write/sign-in';
 import { AccessTokenCreator } from 'src/user/domain/services/access-token-creator';
 import { PasswordCompare } from 'src/user/domain/services/password-compare';
 import { SignInResponse } from '../../dto/read/sign-in';
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';
+import { UnauthorizedException } from '@nestjs/common';
 
 interface Props {
   dto: SignInDTO;
@@ -34,6 +35,8 @@ export class SignInUser {
           accessToken: accessToken,
           name: user.name,
         };
+      } else {
+        throw new UnauthorizedException();
       }
     }
 

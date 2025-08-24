@@ -1,18 +1,31 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { UserPostgresRepository } from '../../postgres/repository/user';
 import { GetUserById } from 'src/user/application/use-cases/user/get-user-by-id';
 import { UserResponse } from 'src/user/application/dto/read/user';
-import { CreateUserDto } from 'src/user/application/dto/write/dto/create-user';
+import { CreateUserDto } from 'src/user/application/dto/write/create-user';
 import { UserCreator } from 'src/user/domain/services/user-creator';
 import { CreateUser } from 'src/user/application/use-cases/user/create-user';
 import { Auth } from '../decorators/auth';
 import { PasswordCrypt } from 'src/user/domain/services/password-crypt';
+import { ChangePasswordDTO } from 'src/user/application/dto/write/change-password';
+import { PasswordCompare } from 'src/user/domain/services/password-compare';
+import { ChangeUserPassword } from 'src/user/application/use-cases/user/change-user-password';
+import { UpdateUserDto } from 'src/user/application/dto/write/update-user';
+import { UpdateUser } from 'src/user/application/use-cases/user/update-user';
+import { User } from 'src/user/domain/entities/user';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly repository: UserPostgresRepository,
-  ) {}
+  constructor(private readonly repository: UserPostgresRepository) {}
 
   @Auth()
   @Get(':id')
@@ -24,13 +37,38 @@ export class UserController {
     return user;
   }
 
+  @Auth()
   @Post()
-  async createAdmin(@Body() dto: CreateUserDto): Promise<void> {
+  async createUser(@Body() dto: CreateUserDto): Promise<void> {
     const hasher = new PasswordCrypt();
     const creator = new UserCreator(this.repository, hasher);
 
     const usecase = new CreateUser(creator);
 
     await usecase.execute({ dto: dto });
+  }
+
+  @Auth()
+  @Patch('change-password')
+  async changePassword(
+    @Body() dto: ChangePasswordDTO,
+    @Req() req: Request & { user: User },
+  ) {
+    const hasher = new PasswordCrypt();
+    const comparator = new PasswordCompare();
+    const usecase = new ChangeUserPassword(this.repository, hasher, comparator);
+
+    await usecase.execute({ dto: dto, user: req.user });
+  }
+
+  @Auth()
+  @Patch()
+  async updateUser(
+    @Body() dto: UpdateUserDto,
+    @Req() req: Request & { user: User },
+  ): Promise<void> {
+    const user = req.user; 
+    const usecase = new UpdateUser(this.repository);
+    await usecase.execute({ dto, user });
   }
 }

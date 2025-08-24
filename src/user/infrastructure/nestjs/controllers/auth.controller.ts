@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserPostgresRepository } from '../../postgres/repository/user';
 import { JwtService } from '@nestjs/jwt';
-import { SignInDTO } from 'src/user/application/dto/write/dto/sign-in';
+import { SignInDTO } from 'src/user/application/dto/write/sign-in';
 import { EnvService } from 'src/app/modules/env/services/env';
 import { SignInResponse } from 'src/user/application/dto/read/sign-in';
 import { AccessTokenCreator } from 'src/user/domain/services/access-token-creator';

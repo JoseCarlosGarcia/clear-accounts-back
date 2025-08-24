@@ -12,7 +12,6 @@ export class UserPostgresMapper {
       created_at: u.created_at,
       deleted: u.deleted,
       name: u.name,
-      birthday: u.birthday
     });
   }
 }

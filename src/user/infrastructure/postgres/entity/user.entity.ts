@@ -14,11 +14,6 @@ export class UserEntity {
   @Column({ type: 'text' })
   name: string;
 
-  @Column({
-    type: 'timestamp',
-  })
-  birthday: Date;
-
   @Column({ type: 'timestamp' })
   created_at: Date;
 

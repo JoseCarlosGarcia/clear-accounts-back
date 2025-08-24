@@ -20,7 +20,7 @@ import { JwtService } from '@nestjs/jwt';
           database: envServices.DATABASE_NAME,
           synchronize: true,
           logging: false,
-          dropSchema: true,
+          dropSchema: false,
           entities: [UserEntity],
         };
       },

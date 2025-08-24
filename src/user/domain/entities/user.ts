@@ -4,7 +4,6 @@ interface Props {
   password: string;
   name: string;
   created_at: Date;
-  birthday: Date;
   deleted: boolean;
 }
 
@@ -14,7 +13,6 @@ export class User {
   email: string;
   password: string;
   name: string;
-  birthday: Date;
   deleted: boolean;
 
   constructor({
@@ -24,7 +22,6 @@ export class User {
     password,
     name,
     deleted,
-    birthday,
   }: Props) {
     this.id = id;
     this.created_at = created_at;
@@ -32,6 +29,5 @@ export class User {
     this.password = password;
     this.deleted = deleted;
     this.name = name;
-    this.birthday = birthday;
   }
 }

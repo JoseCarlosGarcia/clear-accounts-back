@@ -12,7 +12,6 @@ export class UserCreator {
     email, 
     password,
     name,
-    birthday
   }: CreateUserProps): Promise<void> {
     const found = await this.repository.findByEmail(email);
 
@@ -26,7 +25,6 @@ export class UserCreator {
       email: email,
       name: name,
       password: hashedpassword,
-      birthday: birthday
     });
   }
 }

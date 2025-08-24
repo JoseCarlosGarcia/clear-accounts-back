@@ -3,7 +3,7 @@ import { UserController } from './infrastructure/nestjs/controllers/user.control
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './infrastructure/postgres/entity/user.entity';
 import { UserPostgresRepository } from './infrastructure/postgres/repository/user';
-import { AuthController } from './infrastructure/nestjs/controllers/auth';
+import { AuthController } from './infrastructure/nestjs/controllers/auth.controller';
 import { UserServices } from './domain/services/user-services';
 import { JwtService } from '@nestjs/jwt';
 
