@@ -5,15 +5,11 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post,
   Req,
 } from '@nestjs/common';
 import { UserPostgresRepository } from '../../postgres/repository/user';
 import { GetUserById } from 'src/user/application/use-cases/user/get-user-by-id';
 import { UserResponse } from 'src/user/application/dto/read/user';
-import { CreateUserDto } from 'src/user/application/dto/write/create-user';
-import { UserCreator } from 'src/user/domain/services/user-creator';
-import { CreateUser } from 'src/user/application/use-cases/user/create-user';
 import { Auth } from '../decorators/auth';
 import { PasswordCrypt } from 'src/user/domain/services/password-crypt';
 import { ChangePasswordDTO } from 'src/user/application/dto/write/change-password';
@@ -38,17 +34,6 @@ export class UserController {
   }
 
   @Auth()
-  @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<void> {
-    const hasher = new PasswordCrypt();
-    const creator = new UserCreator(this.repository, hasher);
-
-    const usecase = new CreateUser(creator);
-
-    await usecase.execute({ dto: dto });
-  }
-
-  @Auth()
   @Patch('change-password')
   async changePassword(
     @Body() dto: ChangePasswordDTO,
@@ -67,7 +52,7 @@ export class UserController {
     @Body() dto: UpdateUserDto,
     @Req() req: Request & { user: User },
   ): Promise<void> {
-    const user = req.user; 
+    const user = req.user;
     const usecase = new UpdateUser(this.repository);
     await usecase.execute({ dto, user });
   }

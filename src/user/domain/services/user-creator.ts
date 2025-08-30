@@ -12,7 +12,7 @@ export class UserCreator {
     email, 
     password,
     name,
-  }: CreateUserProps): Promise<void> {
+  }: CreateUserProps): Promise<number> {
     const found = await this.repository.findByEmail(email);
 
     if (found && !found.deleted) {
@@ -21,7 +21,7 @@ export class UserCreator {
 
     const hashedpassword = await this.hasher.execute({ password: password });
 
-    await this.repository.create({
+    return await this.repository.create({
       email: email,
       name: name,
       password: hashedpassword,
