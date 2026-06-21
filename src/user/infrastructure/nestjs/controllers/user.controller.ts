@@ -19,11 +19,11 @@ import { UpdateUserDto } from 'src/user/application/dto/write/update-user';
 import { UpdateUser } from 'src/user/application/use-cases/user/update-user';
 import { User } from 'src/user/domain/entities/user';
 
+@Auth()
 @Controller('user')
 export class UserController {
   constructor(private readonly repository: UserPostgresRepository) {}
 
-  @Auth()
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<UserResponse> {
     const usecase = new GetUserById(this.repository);
@@ -33,7 +33,6 @@ export class UserController {
     return user;
   }
 
-  @Auth()
   @Patch('change-password')
   async changePassword(
     @Body() dto: ChangePasswordDTO,
@@ -46,7 +45,6 @@ export class UserController {
     await usecase.execute({ dto: dto, user: req.user });
   }
 
-  @Auth()
   @Patch()
   async updateUser(
     @Body() dto: UpdateUserDto,

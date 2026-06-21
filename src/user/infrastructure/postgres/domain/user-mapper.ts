@@ -1,10 +1,10 @@
 import { User } from 'src/user/domain/entities/user';
-import { UserEntity } from '../entity/user.entity';
+import { UserModel } from '../entity/user.model';
 
 export class UserPostgresMapper {
   constructor() {}
 
-  static execute(u: UserEntity): User {
+  static execute(u: UserModel): User {
     return new User({
       email: u.email,
       id: u.id,

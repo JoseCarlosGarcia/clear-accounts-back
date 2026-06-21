@@ -5,7 +5,7 @@ import {
   GetUserProps,
   IUserRepository,
 } from 'src/user/domain/repository/user';
-import { UserEntity } from '../entity/user.entity';
+import { UserModel } from '../entity/user.model';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/domain/entities/user';
 import { UserPostgresMapper } from '../domain/user-mapper';
@@ -13,8 +13,8 @@ import { UserPostgresMapper } from '../domain/user-mapper';
 @Injectable()
 export class UserPostgresRepository implements IUserRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserModel)
+    private readonly userRepository: Repository<UserModel>,
   ) {}
 
   async all(props: GetUserProps): Promise<User[]> {
@@ -27,7 +27,7 @@ export class UserPostgresRepository implements IUserRepository {
   }
 
   async create(props: CreateUserProps): Promise<number> {
-    const user = new UserEntity();
+    const user = new UserModel();
     user.email = props.email;
     user.name = props.name;
     user.password = props.password;

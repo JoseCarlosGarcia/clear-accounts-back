@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'user' })
-export class UserEntity {
+@Entity()
+export class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 

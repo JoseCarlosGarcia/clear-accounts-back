@@ -42,6 +42,9 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
+# docs (diseño y planes, no versionados)
+/docs
+
 # temp directory
 .temp
 .tmp
