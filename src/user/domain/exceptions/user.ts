@@ -1,19 +1,21 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { ConflictException } from 'src/shared/domain/exceptions/conflict.exception';
+import { NotFoundException } from 'src/shared/domain/exceptions/not-found.exception';
 
-export class NotFoundUserException extends HttpException {
+export class UserNotFoundException extends NotFoundException {
   constructor() {
-    super(``, HttpStatus.NOT_FOUND);
+    super('user-not-found');
   }
 }
 
-export class RepeatUserException extends HttpException {
+export class RepeatUserException extends ConflictException {
   constructor() {
-    super(``, HttpStatus.CONFLICT);
+    super('repeat-user');
   }
 }
 
-export class NotEqualPasswordsException extends HttpException {
+export class NotEqualPasswordsException extends ConflictException {
   constructor() {
-    super(``, HttpStatus.CONFLICT);
+    super('not-equal-passwords');
   }
 }
+

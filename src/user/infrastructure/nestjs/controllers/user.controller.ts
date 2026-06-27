@@ -3,55 +3,60 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
-  Req,
 } from '@nestjs/common';
-import { UserPostgresRepository } from '../../postgres/repository/user';
-import { GetUserById } from 'src/user/application/use-cases/user/get-user-by-id';
-import { UserResponse } from 'src/user/application/dto/read/user';
-import { Auth } from '../decorators/auth';
+import { UserResponse } from 'src/user/application/queries/responses/user.response';
+import { Auth } from '../decorators/auth.decorator';
+import { CurrentUser } from 'src/shared/infrastructure/nest/decorators/current-user.decorator';
 import { PasswordCrypt } from 'src/user/domain/services/password-crypt';
-import { ChangePasswordDTO } from 'src/user/application/dto/write/change-password';
 import { PasswordCompare } from 'src/user/domain/services/password-compare';
-import { ChangeUserPassword } from 'src/user/application/use-cases/user/change-user-password';
-import { UpdateUserDto } from 'src/user/application/dto/write/update-user';
-import { UpdateUser } from 'src/user/application/use-cases/user/update-user';
-import { User } from 'src/user/domain/entities/user';
+import { ChangePasswordRequest } from 'src/user/application/commands/requests/change-password.request';
+import { UserChangePasswordCommand } from 'src/user/application/commands/user-change-password.command';
+import { UserChangePassword } from 'src/user/domain/services/user-change-password';
+import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
+import { UserUpdateCommand } from 'src/user/application/commands/user-update.command';
+import { UserUpdate } from 'src/user/domain/services/user-update';
+import { User } from 'src/user/domain/entities/user.entity';
+import { TypeOrmUserRepository } from '../../typeorm/repository/user.repository';
+import { UserGetById } from 'src/user/application/queries/user-get-by-id.query';
+import { UserFindById } from 'src/user/domain/services/user-find-by-id';
 
 @Auth()
-@Controller('user')
+@Controller('users')
 export class UserController {
-  constructor(private readonly repository: UserPostgresRepository) {}
+  constructor(private readonly repository: TypeOrmUserRepository) {}
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<UserResponse> {
-    const usecase = new GetUserById(this.repository);
+  async findById(@Param('id') id: string): Promise<UserResponse> {
+    const service = new UserFindById(this.repository);
+    const query = new UserGetById(service);
 
-    const user = await usecase.execute({ id: id });
+    const user = await query.execute({ id });
 
     return user;
   }
 
   @Patch('change-password')
   async changePassword(
-    @Body() dto: ChangePasswordDTO,
-    @Req() req: Request & { user: User },
-  ) {
-    const hasher = new PasswordCrypt();
-    const comparator = new PasswordCompare();
-    const usecase = new ChangeUserPassword(this.repository, hasher, comparator);
-
-    await usecase.execute({ dto: dto, user: req.user });
+    @Body() request: ChangePasswordRequest,
+    @CurrentUser() user: User,
+  ): Promise<void> {
+    const service = new UserChangePassword(
+      this.repository,
+      new PasswordCrypt(),
+      new PasswordCompare(),
+    );
+    const command = new UserChangePasswordCommand(service);
+    await command.execute({ request, user });
   }
 
   @Patch()
   async updateUser(
-    @Body() dto: UpdateUserDto,
-    @Req() req: Request & { user: User },
+    @Body() request: UpdateUserRequest,
+    @CurrentUser() user: User,
   ): Promise<void> {
-    const user = req.user;
-    const usecase = new UpdateUser(this.repository);
-    await usecase.execute({ dto, user });
+    const service = new UserUpdate(this.repository);
+    const command = new UserUpdateCommand(service);
+    await command.execute({ request, user });
   }
 }

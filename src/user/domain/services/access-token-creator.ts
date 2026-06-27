@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { EnvService } from 'src/app/modules/env/services/env';
 
 interface Props {
-  id: number;
+  id: string;
 }
 
 export class AccessTokenCreator {

@@ -1,9 +1,9 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../entities/user';
-import { IUserRepository } from '../repository/user';
+import { User } from '../entities/user.entity';
+import { IUserRepository } from '../repositories/user.repository';
 import { EnvService } from 'src/app/modules/env/services/env';
-import { TokenPayload } from '../interface/token-payload';
+import { TokenPayload } from '../interfaces/token-payload';
 
 interface Props {
   token: string;

@@ -1,8 +1,8 @@
-import { IUserRepository } from 'src/user/domain/repository/user';
-import { SignInDTO } from '../../dto/write/sign-in';
+import { IUserRepository } from 'src/user/domain/repositories/user.repository';
+import { SignInDTO } from './requests/sign-in';
 import { AccessTokenCreator } from 'src/user/domain/services/access-token-creator';
 import { PasswordCompare } from 'src/user/domain/services/password-compare';
-import { SignInResponse } from '../../dto/read/sign-in';
+import { SignInResponse } from './responses/sign-in';
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';
 import { UnauthorizedException } from '@nestjs/common';
 
@@ -20,7 +20,7 @@ export class SignInUser {
   async execute({ dto }: Props): Promise<SignInResponse> {
     const user = await this.repository.findByEmail(dto.email);
     
-    if (user && !user.deleted) {
+    if (user && !user.active) {
       const equal = await this.comparator.execute({
         compare: dto.password,
         hashed: user.password,

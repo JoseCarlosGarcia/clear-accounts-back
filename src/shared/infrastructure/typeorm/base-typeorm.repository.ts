@@ -6,6 +6,7 @@ import {
   Repository,
 } from 'typeorm';
 import { TransactionExecutor } from './typeorm-transaction.executor';
+
 export abstract class BaseTypeOrmRepository<Model extends ObjectLiteral> {
   protected constructor(
     private readonly dataSource: DataSource,
