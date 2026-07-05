@@ -6,12 +6,12 @@ export class UserModel extends Model{
   @Column({ type: 'text' })
   email: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', select: false })
   password: string;
 
   @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'bool', default: false })
-  deleted: boolean;
+  @Column({ type: 'bool', default: true })
+  active: boolean;
 }

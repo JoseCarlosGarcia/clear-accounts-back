@@ -2,14 +2,13 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   Param,
   Patch,
 } from '@nestjs/common';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
-import { Auth } from '../decorators/auth.decorator';
 import { CurrentUser } from 'src/shared/infrastructure/nest/decorators/current-user.decorator';
-import { PasswordCrypt } from 'src/user/domain/services/password-crypt';
-import { PasswordCompare } from 'src/user/domain/services/password-compare';
+import { BcryptPasswordHasher } from 'src/authentication/infrastructure/nest/services/bcrypt-password-hasher';
 import { ChangePasswordRequest } from 'src/user/application/commands/requests/change-password.request';
 import { UserChangePasswordCommand } from 'src/user/application/commands/user-change-password.command';
 import { UserChangePassword } from 'src/user/domain/services/user-change-password';
@@ -20,11 +19,18 @@ import { User } from 'src/user/domain/entities/user.entity';
 import { TypeOrmUserRepository } from '../../typeorm/repository/user.repository';
 import { UserGetById } from 'src/user/application/queries/user-get-by-id.query';
 import { UserFindById } from 'src/user/domain/services/user-find-by-id';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
+import { TransactionExecutor } from 'src/shared/infrastructure/typeorm/typeorm-transaction.executor';
 
 @Auth()
 @Controller('users')
 export class UserController {
-  constructor(private readonly repository: TypeOrmUserRepository) {}
+  constructor(
+    @Inject()
+    private readonly transactionExecutor: TransactionExecutor,
+    @Inject()
+    private readonly repository: TypeOrmUserRepository
+  ) {}
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<UserResponse> {
@@ -43,8 +49,7 @@ export class UserController {
   ): Promise<void> {
     const service = new UserChangePassword(
       this.repository,
-      new PasswordCrypt(),
-      new PasswordCompare(),
+      new BcryptPasswordHasher(),
     );
     const command = new UserChangePasswordCommand(service);
     await command.execute({ request, user });

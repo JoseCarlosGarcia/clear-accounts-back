@@ -1,9 +1,9 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class SignInDTO {
-  @IsNotEmpty()
+export class SignInRequest {
   @IsString()
-  @IsEmail({ host_blacklist: [] })
+  @IsNotEmpty()
+  @IsEmail()
   email: string;
 
   @IsString()

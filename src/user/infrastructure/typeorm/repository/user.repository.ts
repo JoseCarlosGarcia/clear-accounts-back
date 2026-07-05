@@ -34,8 +34,16 @@ export class TypeOrmUserRepository
       {
         email: user.email,
         name: user.name,
+        active: user.active,
+      },
+    );
+  }
+
+  async updatePassword(user: User): Promise<void> {
+    await this.repository.update(
+      { id: user.getId() },
+      {
         password: user.password,
-        deleted: user.active,
       },
     );
   }
@@ -43,6 +51,17 @@ export class TypeOrmUserRepository
   async findByEmail(email: string): Promise<User | null> {
     const found = await this.repository.findOne({
       where: { email: email },
+    });
+
+    return found ? UserMapper.toDomain(found) : null;
+  }
+
+  async findByEmailWithPassword(email: string): Promise<User | null> {
+    const found = await this.repository.findOne({
+      where: { email: email },
+      select: {
+        password: true,
+      },
     });
 
     return found ? UserMapper.toDomain(found) : null;

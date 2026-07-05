@@ -1,6 +1,6 @@
 import IdGenerator from 'src/shared/domain/interfaces/id.generator';
 import { RepeatUserException } from '../exceptions/user';
-import { PasswordCrypt } from './password-crypt';
+import { PasswordHasher } from 'src/authentication/domain/interfaces/password-hasher';
 import { User } from '../entities/user.entity';
 import { IUserRepository } from '../repositories/user.repository';
 
@@ -14,7 +14,7 @@ export class UserCreate {
   constructor(
     private readonly repository: IUserRepository,
     private readonly idGenerator: IdGenerator,
-    private readonly hasher: PasswordCrypt,
+    private readonly hasher: PasswordHasher,
   ) {}
 
   async execute({ email, password, name }: CreateUserProps): Promise<User> {
@@ -24,7 +24,7 @@ export class UserCreate {
       throw new RepeatUserException();
     }
 
-    const hashedpassword = await this.hasher.execute({ password: password });
+    const hashedpassword = await this.hasher.hash(password);
     const user = new User({
       id: this.idGenerator.create(),
       email: email,

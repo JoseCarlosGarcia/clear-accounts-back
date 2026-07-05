@@ -1,16 +1,18 @@
 import { UserCreate } from 'src/user/domain/services/user-create';
-import { AccessTokenCreator } from 'src/user/domain/services/access-token-creator';
+import { TokenService } from 'src/authentication/domain/interfaces/token-service';
 import { CreateUserRequest } from './requests/create-user.request';
-import { SignInResponse } from '../use-cases/auth/responses/sign-in';
+import { Command } from 'src/shared/application/interfaces/command.interface';
+import { SignInResponse } from 'src/authentication/application/commands/responses/sign-in.response';
+import { UserResponseMapper } from '../mappers/user-response-mapper';
 
 interface Props {
   request: CreateUserRequest;
 }
 
-export class UserRegisterCommand {
+export class UserRegisterCommand implements Command<Props, SignInResponse>{
   constructor(
     private readonly creator: UserCreate,
-    private readonly accessTokenCreator: AccessTokenCreator,
+    private readonly tokenService: TokenService,
   ) {}
 
   async execute({ request }: Props): Promise<SignInResponse> {
@@ -20,12 +22,10 @@ export class UserRegisterCommand {
       password: request.password,
     });
 
-    const accessToken = this.accessTokenCreator.execute({ id: user.id });
+    const accessToken = this.tokenService.sign({ id: user.id });
 
     return {
-      id: user.getId(),
-      email: user.getEmail(),
-      name: user.getName(),
+      user: UserResponseMapper.toResponse(user),
       accessToken,
     };
   }

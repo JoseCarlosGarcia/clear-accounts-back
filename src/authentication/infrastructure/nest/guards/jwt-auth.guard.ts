@@ -4,17 +4,15 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { EnvService } from 'src/app/modules/env/services/env';
-import { TypeOrmUserRepository } from '../../typeorm/repository/user.repository';
-import { AccessTokenVerificator } from 'src/user/domain/services/access-token-verificator';
+import { TypeOrmUserRepository } from '../../../../user/infrastructure/typeorm/repository/user.repository';
 import { User } from 'src/user/domain/entities/user.entity';
+import { JwtTokenService } from '../services/jwt-token-service';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly envService: EnvService,
     private readonly repository: TypeOrmUserRepository,
   ) {}
@@ -29,13 +27,18 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const verificator = new AccessTokenVerificator(
-      this.jwtService,
-      this.envService,
-      this.repository,
-    );
+    const tokenService = new JwtTokenService(this.envService);
 
-    request.user = await verificator.execute({ token });
+    try {
+      const payload = tokenService.verify(token);
+      const user = await this.repository.findById(payload.id);
+
+      if (!user) throw new UnauthorizedException();
+
+      request.user = user;
+    } catch {
+      throw new UnauthorizedException();
+    }
 
     return true;
   }
@@ -45,4 +48,3 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
-

@@ -16,7 +16,7 @@ export class EnvService {
     this.services.getOrThrow<string>('MIGRATION_RUN') === 'true';
   readonly DROP_SCHEMA =
     this.services.getOrThrow<string>('DROP_SCHEMA') === 'true';
-  readonly ACCCESS_TOKEN_SECRET_WORD =
+  readonly ACCESS_TOKEN_SECRET_WORD =
     this.services.getOrThrow<string>('JWT_SECRET');
 
   readonly TOKEN_EXPIRES_TIME =

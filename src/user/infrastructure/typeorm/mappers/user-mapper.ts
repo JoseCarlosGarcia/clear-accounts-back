@@ -9,7 +9,7 @@ export class UserMapper {
       email: u.email,
       id: u.id,
       password: u.password || '',
-      active: u.deleted,
+      active: u.active,
       name: u.name,
     });
   }
@@ -20,6 +20,7 @@ export class UserMapper {
     model.email = user.getEmail();
     model.name = user.getName();
     model.password = user.getPassword();
+    model.active = user.isActive();
     return model;
   }
 
