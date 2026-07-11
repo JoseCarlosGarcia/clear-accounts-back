@@ -1,5 +1,5 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { EnvService } from 'src/app/modules/env/services/env';
+import { EnvService } from 'src/env/services/env';
 import { UserCreate } from 'src/user/domain/services/user-create';
 import { CreateUserRequest } from 'src/user/application/commands/requests/create-user.request';
 import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user.repository';

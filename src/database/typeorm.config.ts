@@ -2,9 +2,10 @@ import 'reflect-metadata';
 import { config } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AppNamingStrategy } from './naming.strategy';
+import { resolveEnvFilePath } from '../env/env-file';
 
 // Carga .env.local en desarrollo, .env en produccion (igual que EnvModule).
-config({ path: process.env.NODE_ENV === 'production' ? '.env' : '.env.local' });
+config({ path: resolveEnvFilePath() });
 
 export interface DatabaseConnection {
   host: string;

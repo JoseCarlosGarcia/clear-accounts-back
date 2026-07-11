@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { EnvService } from 'src/app/modules/env/services/env';
+import { EnvService } from 'src/env/services/env';
 import { TypeOrmUserRepository } from '../../../../user/infrastructure/typeorm/repository/user.repository';
 import { User } from 'src/user/domain/entities/user.entity';
 import { JwtTokenService } from '../services/jwt-token-service';

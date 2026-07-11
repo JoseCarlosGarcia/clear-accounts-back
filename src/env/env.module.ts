@@ -1,18 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { EnvService } from './services/env';
 import { ConfigModule } from '@nestjs/config';
-
-const filterEnv = () => {
-  const NODE_ENV = process.env.NODE_ENV;
-
-  if (NODE_ENV === 'production') {
-    return '.env';
-  } else {
-    return '.env.local';
-  }
-};
-
-const envFile = filterEnv();
+import { resolveEnvFilePath } from './env-file';
 
 @Global()
 @Module({
@@ -20,7 +9,7 @@ const envFile = filterEnv();
   exports: [EnvService],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: envFile,
+      envFilePath: resolveEnvFilePath(),
       expandVariables: true,
       isGlobal: false,
     }),

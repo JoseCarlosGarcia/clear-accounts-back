@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { EnvService } from 'src/app/modules/env/services/env';
+import { EnvService } from 'src/env/services/env';
 import { TokenPayload } from 'src/authentication/domain/interfaces/token-payload';
 import { TokenService } from 'src/authentication/domain/interfaces/token-service';
 

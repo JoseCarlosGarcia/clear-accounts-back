@@ -1,14 +1,12 @@
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { EnvModule } from '../app/modules/env/env.module';
-import { EnvService } from '../app/modules/env/services/env';
+import { EnvService } from 'src/env/services/env';
 import { createDataSource } from './typeorm.config';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [EnvModule],
       inject: [EnvService],
       useFactory: (env: EnvService) => ({
         ...createDataSource({
@@ -21,7 +19,7 @@ import { createDataSource } from './typeorm.config';
         // Las migraciones NO se corren desde el DataSource; las aplica
         // onModuleInit segun MIGRATION_RUN (control explicito + logging).
         migrationsRun: false,
-        synchronize: env.SYNCHRONYZE,
+        synchronize: env.SYNCHRONIZE,
         dropSchema: env.DROP_SCHEMA,
       }),
     }),
