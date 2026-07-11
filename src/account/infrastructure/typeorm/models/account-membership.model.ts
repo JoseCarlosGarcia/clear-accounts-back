@@ -1,4 +1,4 @@
-import { AccountRole } from 'src/account/domain/enums/account-type';
+import { AccountRole } from 'src/account/domain/enums/account-role';
 import { Model } from 'src/shared/infrastructure/typeorm/base.model';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';

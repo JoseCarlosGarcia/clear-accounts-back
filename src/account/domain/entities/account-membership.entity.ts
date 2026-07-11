@@ -1,5 +1,5 @@
 import { User } from 'src/user/domain/entities/user.entity';
-import { AccountRole } from '../enums/account-type';
+import { AccountRole } from '../enums/account-role';
 
 export interface AccountMembershipProps {
   id: string;
