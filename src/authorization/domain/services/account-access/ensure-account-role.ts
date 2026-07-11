@@ -1,6 +1,6 @@
 import { AccountMembership } from 'src/account/domain/entities/account-membership.entity';
 import { EnsureAccountMember } from './ensure-account-member';
-import { InsufficientAccountRoleException } from '../exceptions/account-access';
+import { InsufficientAccountRoleException } from '../../exceptions/account-access';
 import { AccountRole } from 'src/account/domain/enums/account-role';
 
 interface Props {

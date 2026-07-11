@@ -24,6 +24,7 @@ export class AccountMembership {
     this.createdAt = props.createdAt ?? new Date();
     this.user = props.user;
     this.role = props.role;
+    this.active = props.active;
   }
 
   getId(): string {
