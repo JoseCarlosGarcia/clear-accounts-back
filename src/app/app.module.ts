@@ -4,6 +4,7 @@ import { EnvModule } from './modules/env/env.module';
 import { SharedModule } from 'src/shared/shared.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
+import { AccountModule } from 'src/account/account.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AuthenticationModule } from 'src/authentication/authentication.module';
     SharedModule,
     UserModule,
     AuthenticationModule,
+    AccountModule,
   ],
   controllers: [],
   providers: [],
