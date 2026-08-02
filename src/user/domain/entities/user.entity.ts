@@ -4,7 +4,7 @@ interface Props {
   password: string;
   name: string;
   active: boolean;
-  createdAt?: Date;
+  createdAt: Date;
 }
 
 export class User {
@@ -17,7 +17,7 @@ export class User {
 
   constructor({ email, createdAt, id, password, name, active }: Props) {
     this.id = id;
-    this.createdAt = createdAt ?? new Date();
+    this.createdAt = createdAt;
     this.email = email;
     this.password = password;
     this.active = active;

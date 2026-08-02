@@ -18,7 +18,6 @@ export class EnvService {
     this.config.getOrThrow<string>('DROP_SCHEMA') === 'true';
   readonly ACCESS_TOKEN_SECRET_WORD =
     this.config.getOrThrow<string>('JWT_SECRET');
-
   readonly TOKEN_EXPIRES_TIME =
     this.config.getOrThrow<string>('TOKEN_EXPIRES_TIME');
 }

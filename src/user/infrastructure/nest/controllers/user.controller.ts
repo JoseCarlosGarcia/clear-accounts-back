@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Param,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 import { CurrentUser } from 'src/shared/infrastructure/nest/decorators/current-user.decorator';
 import { BcryptPasswordHasher } from 'src/authentication/infrastructure/nest/services/bcrypt-password-hasher';
@@ -29,7 +22,7 @@ export class UserController {
     @Inject()
     private readonly transactionExecutor: TransactionExecutor,
     @Inject()
-    private readonly repository: TypeOrmUserRepository
+    private readonly repository: TypeOrmUserRepository,
   ) {}
 
   @Get(':id')
@@ -47,12 +40,14 @@ export class UserController {
     @Body() request: ChangePasswordRequest,
     @CurrentUser() user: User,
   ): Promise<void> {
-    const service = new UserChangePassword(
-      this.repository,
-      new BcryptPasswordHasher(),
-    );
-    const command = new UserChangePasswordCommand(service);
-    await command.execute({ request, user });
+    return this.transactionExecutor.execute(async () => {
+      const service = new UserChangePassword(
+        this.repository,
+        new BcryptPasswordHasher(),
+      );
+      const command = new UserChangePasswordCommand(service);
+      return command.execute({ request, user });
+    });
   }
 
   @Patch()
@@ -60,8 +55,10 @@ export class UserController {
     @Body() request: UpdateUserRequest,
     @CurrentUser() user: User,
   ): Promise<void> {
-    const service = new UserUpdate(this.repository);
-    const command = new UserUpdateCommand(service);
-    await command.execute({ request, user });
+    return this.transactionExecutor.execute(async () => {
+      const service = new UserUpdate(this.repository);
+      const command = new UserUpdateCommand(service);
+      return command.execute({ request, user });
+    });
   }
 }

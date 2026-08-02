@@ -11,6 +11,7 @@ export class UserMapper {
       password: u.password || '',
       active: u.active,
       name: u.name,
+      createdAt: u.createdAt,
     });
   }
 

@@ -57,12 +57,11 @@ export class TypeOrmUserRepository
   }
 
   async findByEmailWithPassword(email: string): Promise<User | null> {
-    const found = await this.repository.findOne({
-      where: { email: email },
-      select: {
-        password: true,
-      },
-    });
+    const found = await this.repository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: email })
+      .getOne();
 
     return found ? UserMapper.toDomain(found) : null;
   }
