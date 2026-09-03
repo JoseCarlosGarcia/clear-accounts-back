@@ -6,6 +6,6 @@ export interface IAccountRepository {
   save(account: Account): Promise<void>;
   update(account: Account): Promise<void>;
   find(props: AccountPaginationParams): Promise<PaginationResult<Account>>;
-  findById(id: string): Promise<Account>;
+  findById(id: string): Promise<Account | null>;
   delete(id: string): Promise<void>;
 }

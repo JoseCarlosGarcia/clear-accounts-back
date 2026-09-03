@@ -13,7 +13,7 @@ export class AccountFindById {
   async execute({ id, isActive }: Props): Promise<Account | null> {
     const account = await this.repository.findById(id);
 
-    if(isActive && !account.isActive()) return null;
+    if(account && isActive && !account.isActive()) return null;
 
     return account;
   }

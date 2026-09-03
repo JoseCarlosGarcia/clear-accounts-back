@@ -33,7 +33,7 @@ export class JwtAuthGuard implements CanActivate {
       const payload = tokenService.verify(token);
       const user = await this.repository.findById(payload.id);
 
-      if (!user) throw new UnauthorizedException();
+      if (!user || (user && !user.isActive())) throw new UnauthorizedException();
 
       request.user = user;
     } catch {
@@ -48,3 +48,4 @@ export class JwtAuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
+

@@ -1,5 +1,4 @@
 import { PaginationParams } from 'src/shared/domain/interfaces/pagination';
-import { AccountRole } from '../enums/account-role';
 
 export interface AccountPaginationParams extends PaginationParams {
   userId: string;
@@ -8,5 +7,4 @@ export interface AccountPaginationParams extends PaginationParams {
   createdAtMax?: Date;
   isShared?: boolean;
   isActive?: boolean;
-  accountRole?: AccountRole[];
 }

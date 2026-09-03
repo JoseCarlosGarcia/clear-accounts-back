@@ -4,20 +4,25 @@ import { IUserRepository } from '../repositories/user.repository';
 
 interface Props {
   id: string;
+  isActive: boolean;
 }
 
 export class UserFindById {
   constructor(private readonly repository: IUserRepository) {}
 
-  async execute({ id }: Props): Promise<User | null> {
-    const found = await this.repository.findById(id);
-    return found;
+  async execute({ id, isActive }: Props): Promise<User | null> {
+    const user = await this.repository.findById(id);
+
+    if(user && isActive && !user.isActive()) return null;
+    return user;
   }
 
-  async executeOrFail({ id }: Props): Promise<User> {
-    const found = await this.repository.findById(id);
+  async executeOrFail({ id, isActive }: Props): Promise<User> {
+    const user = await this.repository.findById(id);
 
-    if(!found) throw new UserNotFoundException();
-    return found;
+    if(!user) throw new UserNotFoundException();
+
+    if(isActive && !user.isActive()) throw new UserNotFoundException();
+    return user;
   }
 }

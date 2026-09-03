@@ -8,7 +8,7 @@ export class AccountMembershipMapper {
   static toDomain(model: AccountMembershipModel): AccountMembership {
     return new AccountMembership({
       id: model.id,
-      accountId: model.account_id,
+      account: model.account,
       role: model.role,
       user: UserMapper.toDomain(model.user),
       createdAt: model.createdAt,

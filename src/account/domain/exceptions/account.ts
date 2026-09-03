@@ -7,9 +7,15 @@ export class AccountNotFoundException extends NotFoundException {
   }
 }
 
-export class LastOwnerCannotBeRemovedException extends ConflictException {
+export class AccountRequiresOwnerException extends ConflictException {
   constructor() {
-    super('last-owner-cannot-be-removed');
+    super('account-requires-owner');
+  }
+}
+
+export class LastMemberCannotBeRemovedException extends ConflictException {
+  constructor() {
+    super('last-member-cannot-be-removed');
   }
 }
 

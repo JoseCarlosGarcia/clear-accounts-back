@@ -6,6 +6,7 @@ import { IAccountMembershipRepository } from 'src/account/domain/repositories/ac
 import { AccountMembershipModel } from '../models/account-membership.model';
 import { AccountMembershipMapper } from '../mappers/account-membership-mapper';
 import { AccountMembership } from 'src/account/domain/entities/account-membership.entity';
+import { AccountRole } from 'src/account/domain/enums/account-role';
 
 @Injectable()
 export class TypeOrmAccountMembershipRepository
@@ -32,6 +33,25 @@ export class TypeOrmAccountMembershipRepository
     });
 
     return found ? AccountMembershipMapper.toDomain(found) : null;
+  }
+
+  async countActiveOwners(accountId: string): Promise<number> {
+    return this.repository.count({
+      where: {
+        account_id: accountId,
+        role: AccountRole.OWNER,
+        active: true,
+      },
+    });
+  }
+
+  async countActiveMemberships(accountId: string): Promise<number> {
+    return this.repository.count({
+      where: {
+        account_id: accountId,
+        active: true,
+      },
+    });
   }
 }
 
