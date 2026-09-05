@@ -5,10 +5,12 @@ import { AccountMembershipSort } from '../enums/account-membership-sort';
 
 export interface AccountMembershipPaginationParams extends PaginationParams {
   accountId?: string;
+  accountName?: string;
   userId?: string;
   createdAtMin?: Date;
   createdAtMax?: Date;
   isActive?: boolean;
+  isAccountActive?: boolean;
   accountRole?: AccountRole[];
   sort?: SortOption<AccountMembershipSort>[];
 }

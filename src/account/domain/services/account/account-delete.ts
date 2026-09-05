@@ -12,10 +12,10 @@ export class AccountDelete {
     private readonly findAccount: AccountFindById,
   ) {}
 
-  async execute({ id }: Props): Promise<Account | null> {
+  async execute({ id }: Props): Promise<Account> {
     const account = await this.findAccount.executeOrFail({
       id: id,
-      isActive: true,
+      onlyActive: true,
     });
     account.delete();
     await this.repository.update(account);

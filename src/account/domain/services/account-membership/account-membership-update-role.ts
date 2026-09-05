@@ -22,7 +22,7 @@ export class AccountMembershipUpdateRole {
       props.accountMembership ??
       (await this.findAccountMembership.executeOrFail({
         id: props.id,
-        isActive: true,
+        onlyActive: true,
       }));
 
     if (accountMembership.getRole() === props.role) return accountMembership;

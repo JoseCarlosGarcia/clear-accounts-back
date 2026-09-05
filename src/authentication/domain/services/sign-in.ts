@@ -1,9 +1,8 @@
 import { IUserRepository } from 'src/user/domain/repositories/user.repository';
-import { UnauthorizedException } from '@nestjs/common';
-import { UserNotFoundException } from 'src/user/domain/exceptions/user';
 import { User } from 'src/user/domain/entities/user.entity';
 import { TokenService } from '../interfaces/token-service';
 import { PasswordHasher } from '../interfaces/password-hasher';
+import { InvalidCredentialsException } from '../exceptions/authentication';
 
 interface SignInProps {
   email: string;
@@ -25,11 +24,11 @@ export class SignIn {
   async execute({ email, password }: SignInProps): Promise<SignInResult> {
     const user = await this.repository.findByEmailWithPassword(email);
 
-    if (!user || !user.isActive()) throw new UserNotFoundException();
+    if (!user || !user.isActive()) throw new InvalidCredentialsException();
 
     const equal = await this.passwordHasher.compare(password, user.getPassword());
 
-    if (!equal) throw new UnauthorizedException();
+    if (!equal) throw new InvalidCredentialsException();
 
     const accessToken = this.tokenService.sign({ id: user.id });
 

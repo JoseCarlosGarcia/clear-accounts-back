@@ -2,6 +2,7 @@ export enum DomainErrorCode {
   NOT_FOUND = 'NOT_FOUND',
   CONFLICT = 'CONFLICT',
   FORBIDDEN = 'FORBIDDEN',
+  UNAUTHORIZED = 'UNAUTHORIZED',
 }
 
 /**

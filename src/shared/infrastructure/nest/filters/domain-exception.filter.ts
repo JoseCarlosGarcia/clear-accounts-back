@@ -14,6 +14,7 @@ const STATUS_BY_CODE: Record<DomainErrorCode, number> = {
   [DomainErrorCode.NOT_FOUND]: HttpStatus.NOT_FOUND,
   [DomainErrorCode.CONFLICT]: HttpStatus.CONFLICT,
   [DomainErrorCode.FORBIDDEN]: HttpStatus.FORBIDDEN,
+  [DomainErrorCode.UNAUTHORIZED]: HttpStatus.UNAUTHORIZED,
 };
 
 /**

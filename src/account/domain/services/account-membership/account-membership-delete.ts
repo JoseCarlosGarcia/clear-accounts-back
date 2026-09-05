@@ -6,6 +6,7 @@ import { AccountMembershipUpdateOwners } from './account-membership-update-owner
 
 interface Props {
   id: string;
+  accountMembership?: AccountMembership;
 }
 
 export class AccountMembershipDelete {
@@ -16,11 +17,13 @@ export class AccountMembershipDelete {
     private readonly updateOwners: AccountMembershipUpdateOwners,
   ) {}
 
-  async execute({ id }: Props): Promise<AccountMembership | null> {
-    const accountMembership = await this.findAccountMembership.executeOrFail({
-      id: id,
-      isActive: true,
-    });
+  async execute(props: Props): Promise<AccountMembership> {
+    const accountMembership =
+      props.accountMembership ??
+      (await this.findAccountMembership.executeOrFail({
+        id: props.id,
+        onlyActive: true,
+      }));
 
     await this.ensureNotLastMember.execute({ accountMembership });
     if (accountMembership.isOwner()) {

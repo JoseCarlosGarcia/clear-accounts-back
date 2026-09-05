@@ -10,7 +10,7 @@ export class UserGetById
   constructor(private readonly service: UserFindById) {}
 
   async execute({ id }: UserGetByIdRequest): Promise<UserResponse> {
-    const user = await this.service.executeOrFail({ id, isActive: true });
+    const user = await this.service.executeOrFail({ id, onlyActive: true });
 
     return UserResponseMapper.toResponse(user);
   }

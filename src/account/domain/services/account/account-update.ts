@@ -19,7 +19,7 @@ export class AccountUpdate {
   async execute(props: Props): Promise<Account> {
     const account = props.account ?? await this.findAccount.executeOrFail({
       id: props.id,
-      isActive: true,
+      onlyActive: true,
     });
 
     if (props.name !== undefined) {

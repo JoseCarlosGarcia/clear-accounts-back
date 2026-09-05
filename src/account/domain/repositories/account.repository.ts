@@ -7,5 +7,4 @@ export interface IAccountRepository {
   update(account: Account): Promise<void>;
   find(props: AccountPaginationParams): Promise<PaginationResult<Account>>;
   findById(id: string): Promise<Account | null>;
-  delete(id: string): Promise<void>;
 }

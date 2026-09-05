@@ -20,4 +20,8 @@ export class EnvService {
     this.config.getOrThrow<string>('JWT_SECRET');
   readonly TOKEN_EXPIRES_TIME =
     this.config.getOrThrow<string>('TOKEN_EXPIRES_TIME');
+  readonly NODE_ENV = this.config.get<string>('NODE_ENV') ?? 'development';
+  readonly PORT = Number(this.config.get<string>('PORT') ?? 3000);
+  readonly SWAGGER_ENABLED =
+    this.config.get<string>('SWAGGER_ENABLED') === 'true';
 }

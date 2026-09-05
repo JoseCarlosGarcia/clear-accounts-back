@@ -19,7 +19,7 @@ export class LastMemberCannotBeRemovedException extends ConflictException {
   }
 }
 
-export class AccountMembershipNotFoundException extends ConflictException {
+export class AccountMembershipNotFoundException extends NotFoundException {
   constructor() {
     super('account-membership-not-found');
   }

@@ -1,6 +1,7 @@
 import { AccountMembership } from "src/account/domain/entities/account-membership.entity";
 import { AccountMembershipModel } from "../models/account-membership.model";
 import { UserMapper } from "src/user/infrastructure/typeorm/mappers/user-mapper";
+import { AccountMapper } from "./account-mapper";
 
 export class AccountMembershipMapper {
   constructor() {}
@@ -8,7 +9,7 @@ export class AccountMembershipMapper {
   static toDomain(model: AccountMembershipModel): AccountMembership {
     return new AccountMembership({
       id: model.id,
-      account: model.account,
+      account: AccountMapper.toDomain(model.account),
       role: model.role,
       user: UserMapper.toDomain(model.user),
       createdAt: model.createdAt,

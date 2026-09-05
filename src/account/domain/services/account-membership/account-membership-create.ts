@@ -5,6 +5,7 @@ import { UserAlreadyMemberException } from '../../exceptions/account';
 import { IAccountMembershipRepository } from '../../repositories/account-membership.repository';
 import { AccountFindById } from '../account/account-find-by-id';
 import { UserFindById } from 'src/user/domain/services/user-find-by-id';
+import { AccountMembershipFindByAccountAndUser } from './account-membership-find-by-account-and-user';
 
 interface Props {
   userId: string;
@@ -17,26 +18,28 @@ export class AccountMembershipCreate {
     private readonly repository: IAccountMembershipRepository,
     private readonly accountFindById: AccountFindById,
     private readonly userFindById: UserFindById,
+    private readonly findAccountMembership: AccountMembershipFindByAccountAndUser,
     private readonly idGenerator: IdGenerator,
   ) {}
 
   async execute(props: Props): Promise<AccountMembership> {
     const account = await this.accountFindById.executeOrFail({
       id: props.accountId,
-      isActive: true,
+      onlyActive: true,
     });
 
     const user = await this.userFindById.executeOrFail({
       id: props.userId,
-      isActive: true,
+      onlyActive: true,
     });
 
-    const existing = await this.repository.findByAccountAndUser(
-      account.getId(),
-      user.getId(),
-    );
+    const existing = await this.findAccountMembership.execute({
+      accountId: account.getId(),
+      userId: user.getId(),
+      onlyActive: false,
+    });
 
-    if (existing) throw new UserAlreadyMemberException();
+    if (existing) return this.restore(existing, props.role);
 
     const accountMembership = new AccountMembership({
       id: this.idGenerator.create(),
@@ -47,6 +50,18 @@ export class AccountMembershipCreate {
       active: true,
     });
     await this.repository.save(accountMembership);
+    return accountMembership;
+  }
+
+  private async restore(
+    accountMembership: AccountMembership,
+    role: AccountRole,
+  ): Promise<AccountMembership> {
+    if (accountMembership.isActive()) throw new UserAlreadyMemberException();
+
+    accountMembership.restore();
+    accountMembership.setRole(role);
+    await this.repository.update(accountMembership);
     return accountMembership;
   }
 }

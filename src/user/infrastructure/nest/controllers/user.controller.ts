@@ -1,4 +1,11 @@
 import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
+import {
+  ApiConflictResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 import { CurrentUser } from 'src/shared/infrastructure/nest/decorators/current-user.decorator';
 import { BcryptPasswordHasher } from 'src/authentication/infrastructure/nest/services/bcrypt-password-hasher';
@@ -16,6 +23,7 @@ import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.dec
 import { TransactionExecutor } from 'src/shared/infrastructure/typeorm/typeorm-transaction.executor';
 
 @Auth()
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(
@@ -26,6 +34,11 @@ export class UserController {
   ) {}
 
   @Get(':id')
+  @ApiOperation({ summary: 'Obtener un usuario por su identificador' })
+  @ApiOkResponse({ type: UserResponse })
+  @ApiNotFoundResponse({
+    description: 'user-not-found: no existe o está desactivado',
+  })
   async findById(@Param('id') id: string): Promise<UserResponse> {
     const service = new UserFindById(this.repository);
     const query = new UserGetById(service);
@@ -36,6 +49,14 @@ export class UserController {
   }
 
   @Patch('change-password')
+  @ApiOperation({
+    summary: 'Cambiar la contraseña del usuario autenticado',
+    description: 'Exige la contraseña actual para confirmar el cambio.',
+  })
+  @ApiOkResponse({ description: 'Contraseña actualizada' })
+  @ApiConflictResponse({
+    description: 'not-equal-passwords: la contraseña actual no coincide',
+  })
   async changePassword(
     @Body() request: ChangePasswordRequest,
     @CurrentUser() user: User,
@@ -51,6 +72,11 @@ export class UserController {
   }
 
   @Patch()
+  @ApiOperation({ summary: 'Editar el nombre y el correo del usuario autenticado' })
+  @ApiOkResponse({ description: 'Usuario actualizado' })
+  @ApiConflictResponse({
+    description: 'repeat-user: otro usuario activo ya usa ese correo',
+  })
   async updateUser(
     @Body() request: UpdateUserRequest,
     @CurrentUser() user: User,

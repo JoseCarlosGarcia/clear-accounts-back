@@ -21,7 +21,7 @@ export class AccountCreate {
       id: this.idGenerator.create(),
       name: props.name,
       initialBalance: props.initialBalance,
-      color: props.color ?? '#FFFFFF',
+      color: props.color ?? '#5a8eff',
       createdAt: new Date(),
       createdBy: props.user,
       active: true

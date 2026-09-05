@@ -4,26 +4,26 @@ import { IAccountRepository } from "../../repositories/account.repository";
 
 interface Props {
   id: string;
-  isActive: boolean;
+  onlyActive: boolean;
 }
 
 export class AccountFindById {
   constructor(private readonly repository: IAccountRepository) {}
 
-  async execute({ id, isActive }: Props): Promise<Account | null> {
+  async execute({ id, onlyActive }: Props): Promise<Account | null> {
     const account = await this.repository.findById(id);
 
-    if(account && isActive && !account.isActive()) return null;
+    if(account && onlyActive && !account.isActive()) return null;
 
     return account;
   }
 
-  async executeOrFail({ id, isActive }: Props): Promise<Account> {
+  async executeOrFail({ id, onlyActive }: Props): Promise<Account> {
     const account = await this.repository.findById(id);
 
     if(!account) throw new AccountNotFoundException();
 
-    if(isActive && !account.isActive()) throw new AccountNotFoundException();
+    if(onlyActive && !account.isActive()) throw new AccountNotFoundException();
 
     return account;
   }
